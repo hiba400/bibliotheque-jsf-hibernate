@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<f:metadata>
+    <f:viewAction action="#{authBean.checkAdminAccess}" />
+    <f:viewAction action="#{livreBean.chargerLivres}" />
+</f:metadata>
+<h:head>
+    <title>Livres</title>
+</h:head>
+<h:body>
+    <h2>Liste des livres</h2>
+
+    <h:form>
+        <h:inputText value="#{livreBean.keyword}" />
+        <h:commandButton value="Rechercher" action="#{livreBean.search}" />
+        <h:commandButton value="Ajouter un livre" action="#{livreBean.nouveau}" />
+    </h:form>
+
+    <h:form>
+        <h:dataTable value="#{livreBean.livres}" var="l" border="1">
+            <h:column>
+                <f:facet name="header">Titre</f:facet>
+                #{l.titre}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Auteur</f:facet>
+                #{l.auteur}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Catégorie</f:facet>
+                #{l.categorie}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Disponible</f:facet>
+                #{l.disponible}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Actions</f:facet>
+                <h:commandButton value="Modifier" action="#{livreBean.edit(l)}" />
+                <h:commandButton value="Supprimer" action="#{livreBean.delete(l)}" />
+            </h:column>
+        </h:dataTable>
+    </h:form>
+
+    <br/>
+    <h:link outcome="/admin/dashboard.xhtml" value="Retour" />
+</h:body>
+</html>

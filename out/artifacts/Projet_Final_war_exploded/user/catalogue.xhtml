@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<f:metadata>
+    <f:viewAction action="#{authBean.checkUserAccess}" />
+    <f:viewAction action="#{empruntBean.chargerTout}" />
+</f:metadata>
+<h:head>
+    <title>Catalogue</title>
+</h:head>
+<h:body>
+    <h2>Catalogue des livres</h2>
+
+    <h:form>
+        <h:dataTable value="#{empruntBean.catalogue}" var="l" border="1">
+            <h:column>
+                <f:facet name="header">Titre</f:facet>
+                #{l.titre}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Auteur</f:facet>
+                #{l.auteur}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Catégorie</f:facet>
+                #{l.categorie}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Disponible</f:facet>
+                #{l.disponible}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <h:commandButton value="Demander" action="#{empruntBean.demander(l)}" disabled="#{not l.disponible}" />
+            </h:column>
+        </h:dataTable>
+    </h:form>
+
+    <br/>
+    <h:link outcome="/user/dashboard.xhtml" value="Retour" />
+</h:body>
+</html>
