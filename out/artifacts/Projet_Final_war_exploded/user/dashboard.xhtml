@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<f:metadata>
+    <f:viewAction action="#{authBean.checkUserAccess}" />
+</f:metadata>
+<h:head>
+    <title>Dashboard Adhérent</title>
+</h:head>
+<h:body>
+    <h1>Dashboard Adhérent</h1>
+
+    <h:link outcome="/user/catalogue.xhtml" value="Voir le catalogue" /><br/>
+    <h:link outcome="/user/mes-demandes.xhtml" value="Mes demandes" /><br/>
+    <h:link outcome="/user/mes-emprunts.xhtml" value="Mes emprunts" /><br/><br/>
+
+    <h:commandButton value="Déconnexion" action="#{authBean.logout}" />
+</h:body>
+</html>
