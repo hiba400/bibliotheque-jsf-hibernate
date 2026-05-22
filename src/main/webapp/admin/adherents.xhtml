@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:fn="jakarta.tags.functions"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{authBean.checkAdminAccess}" />
+    </f:metadata>
+
+    <ui:define name="title">Gestion des Adhérents - Bibliothèque</ui:define>
+    <ui:define name="header">Gestion des Adhérents</ui:define>
+    <ui:define name="breadcrumb">Adhérents</ui:define>
+
+    <ui:define name="content">
+        <h:messages id="messages" globalOnly="true" styleClass="animate-fade"
+                    style="list-style: none; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 500;"
+                    infoStyle="background: #d1fae5; color: #065f46; border: 1px solid #10b981;"
+                    errorStyle="background: #fee2e2; color: #991b1b; border: 1px solid #ef4444;" />
+
+        <h:form id="mainForm">
+            <div class="card animate-fade">
+                <div class="card-header">
+                    <div style="display: flex; gap: 1rem; flex: 1; max-width: 600px;">
+                        <div style="position: relative; flex: 1;">
+                            <i class="fa-solid fa-user-search" style="position: absolute; left: 1rem; top: 1.1rem; color: #a0aec0;"></i>
+                            <h:inputText value="#{utilisateurBean.utilisateur.nom}" 
+                                         styleClass="form-control" style="padding-left: 3rem; background: #f8fafc;"
+                                         placeholder="Rechercher un adhérent...">
+                                <f:ajax event="keyup" listener="#{utilisateurBean.chargerUtilisateurs}" render="adherentsTableContainer" />
+                            </h:inputText>
+                        </div>
+                    </div>
+                    
+                    <h:commandLink action="#{utilisateurBean.nouveau}" styleClass="btn btn-success">
+                        <i class="fa-solid fa-user-plus"></i> Nouveau Membre
+                    </h:commandLink>
+                </div>
+
+                <h:panelGroup id="adherentsTableContainer" layout="block">
+                    <div class="table-container">
+                        <h:dataTable value="#{utilisateurBean.utilisateurs}" var="u"
+                                     styleClass="premium-table"
+                                     rendered="#{not empty utilisateurBean.utilisateurs}">
+                            
+                            <h:column>
+                                <f:facet name="header">Profil</f:facet>
+                                <div style="width: 40px; height: 40px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem;">
+                                    #{fn:substring(u.nom, 0, 1)}
+                                </div>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Nom Complet</f:facet>
+                                <div style="font-weight: 600; color: #1a202c;">#{u.nom}</div>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Email</f:facet>
+                                <div style="color: #636e72;">#{u.email}</div>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Rôle</f:facet>
+                                <h:panelGroup rendered="#{u.role == 'ADMIN'}">
+                                    <span class="badge badge-danger">Administrateur</span>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{u.role == 'ADHERENT'}">
+                                    <span class="badge badge-info">Adhérent</span>
+                                </h:panelGroup>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Actions</f:facet>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <h:commandLink action="#{utilisateurBean.edit(u)}" title="Modifier" styleClass="btn btn-secondary" style="padding: 0.5rem 0.8rem;">
+                                        <i class="fa-solid fa-user-pen" style="color: #4a5568;"></i>
+                                    </h:commandLink>
+                                    <h:commandLink action="#{utilisateurBean.delete(u)}" title="Supprimer" 
+                                                   onclick="if (!confirm('Bannir cet adhérent ?')) return false;" 
+                                                   styleClass="btn btn-secondary" style="padding: 0.5rem 0.8rem;">
+                                        <i class="fa-solid fa-user-minus" style="color: #e53e3e;"></i>
+                                        <f:ajax render="@form :messages" />
+                                    </h:commandLink>
+                                </div>
+                            </h:column>
+                        </h:dataTable>
+
+                        <h:panelGroup rendered="#{empty utilisateurBean.utilisateurs}">
+                            <div style="text-align: center; padding: 4rem 1rem;">
+                                <i class="fa-solid fa-users-slash" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1.5rem;"></i>
+                                <h3 style="color: #4a5568;">Aucun adhérent</h3>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </h:panelGroup>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

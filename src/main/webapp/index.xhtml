@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="title">Accueil - Bibliothèque</ui:define>
+
+    <ui:define name="content">
+        <div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+            <div class="card animate-fade" style="max-width: 500px; text-align: center; padding: 3rem;">
+                <div class="icon" style="font-size: 4rem; margin-bottom: 2rem;">📚</div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Bibliothèque
+                </h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 1.1rem;">
+                    Bienvenue dans votre système de gestion de bibliothèque moderne.
+                </p>
+
+                <div style="display: grid; gap: 1rem;">
+                    <h:link outcome="/login.xhtml" styleClass="btn btn-primary" style="justify-content: center;">
+                        <i class="fa-solid fa-right-to-bracket"></i> Se connecter
+                    </h:link>
+                    <h:link outcome="/register.xhtml" styleClass="btn btn-secondary" style="justify-content: center;">
+                        <i class="fa-solid fa-user-plus"></i> Créer un compte
+                    </h:link>
+                </div>
+                
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                    <p style="font-size: 0.9rem; color: #a0aec0;">Libérez le pouvoir de la lecture</p>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

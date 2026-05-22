@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title><ui:insert name="title">Bibliothèque</ui:insert></title>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</h:head>
+
+<h:body>
+    <div class="main-wrapper">
+        <!-- Sidebar -->
+        <ui:fragment rendered="#{not empty authBean.utilisateurConnecte}">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>📚 BIBLIO</h2>
+                </div>
+                
+                <nav class="sidebar-menu">
+                    <!-- Dashboard -->
+                    <h:link outcome="#{authBean.utilisateurConnecte.role == 'ADMIN' ? '/admin/dashboard' : '/user/dashboard'}" 
+                            styleClass="menu-item #{view.viewId.contains('dashboard') ? 'active' : ''}">
+                        <i class="fa-solid fa-gauge"></i>
+                        <span>Dashboard</span>
+                    </h:link>
+                    
+                    <!-- Catalogue / Livres -->
+                    <h:link outcome="#{authBean.utilisateurConnecte.role == 'ADMIN' ? '/admin/livres' : '/user/catalogue'}" 
+                            styleClass="menu-item #{view.viewId.contains('livre') || view.viewId.contains('catalogue') ? 'active' : ''}">
+                        <i class="fa-solid fa-book"></i>
+                        <span>#{authBean.utilisateurConnecte.role == 'ADMIN' ? 'Gestion Livres' : 'Catalogue'}</span>
+                    </h:link>
+                    
+                    <!-- Emprunts -->
+                    <h:link outcome="#{authBean.utilisateurConnecte.role == 'ADMIN' ? '/admin/emprunts' : '/user/mes-emprunts'}" 
+                            styleClass="menu-item #{view.viewId.contains('emprunt') ? 'active' : ''}">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Emprunts</span>
+                    </h:link>
+                    
+                    <!-- Adhérents (Admin only) -->
+                    <ui:fragment rendered="#{authBean.utilisateurConnecte.role == 'ADMIN'}">
+                        <h:link outcome="/admin/adherents" 
+                                styleClass="menu-item #{view.viewId.contains('adherent') ? 'active' : ''}">
+                            <i class="fa-solid fa-users"></i>
+                            <span>Adhérents</span>
+                        </h:link>
+                    </ui:fragment>
+                </nav>
+                
+                <div class="sidebar-footer">
+                    <div class="user-info" style="margin-bottom: 1rem; font-size: 0.9rem;">
+                        <i class="fa-solid fa-user-circle"></i> #{authBean.utilisateurConnecte.nom}
+                    </div>
+                    <h:form>
+                        <h:commandLink action="#{authBean.logout}" styleClass="menu-item" style="border:none; padding: 0.5rem 0;">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Déconnexion</span>
+                        </h:commandLink>
+                    </h:form>
+                </div>
+            </aside>
+        </ui:fragment>
+
+        <!-- Main Content -->
+        <main class="content-area">
+            <ui:fragment rendered="#{not empty authBean.utilisateurConnecte}">
+                <header class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="font-weight: 600; color: #4a5568;"><ui:insert name="header">Bienvenue</ui:insert></h2>
+                    <div class="breadcrumb" style="font-size: 0.9rem; color: #718096;">
+                        <i class="fa-solid fa-house"></i> / <ui:insert name="breadcrumb">Accueil</ui:insert>
+                    </div>
+                </header>
+            </ui:fragment>
+
+            <div class="animate-fade">
+                <ui:insert name="content">
+                    Content goes here...
+                </ui:insert>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script to handle sidebar responsiveness if needed -->
+    <script>
+        // Potential JS for interactive elements
+    </script>
+</h:body>
+</html>

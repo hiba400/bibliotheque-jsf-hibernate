@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="title">Inscription - Bibliothèque</ui:define>
+
+    <ui:define name="content">
+        <div style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
+            <div class="card animate-fade" style="width: 100%; max-width: 500px; padding: 2.5rem;">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="width: 70px; height: 70px; background: var(--secondary-gradient); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 1.8rem; box-shadow: 0 10px 20px rgba(37, 117, 252, 0.2);">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <h2 style="font-size: 1.8rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Créer un compte</h2>
+                    <p style="color: #718096;">Rejoignez notre communauté de lecteurs</p>
+                </div>
+
+                <h:form id="registerForm">
+                    <h:messages globalOnly="true" style="list-style: none; padding: 1rem; background: #fff5f5; color: #c53030; border-radius: 10px; margin-bottom: 1.5rem; font-size: 0.9rem;" />
+
+                    <div class="form-group">
+                        <h:outputLabel value="Nom complet" styleClass="form-label" for="nom" />
+                        <h:inputText id="nom" value="#{authBean.utilisateur.nom}" 
+                                     styleClass="form-control"
+                                     required="true" requiredMessage="Le nom est requis">
+                            <f:passThroughAttribute name="placeholder" value="Jean Dupont" />
+                        </h:inputText>
+                        <h:message for="nom" style="color: #e53e3e; font-size: 0.8rem;" />
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Email" styleClass="form-label" for="email" />
+                        <h:inputText id="email" value="#{authBean.utilisateur.email}" 
+                                     styleClass="form-control"
+                                     required="true" requiredMessage="L'email est requis">
+                            <f:passThroughAttribute name="placeholder" value="jean@exemple.com" />
+                        </h:inputText>
+                        <h:message for="email" style="color: #e53e3e; font-size: 0.8rem;" />
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Mot de passe" styleClass="form-label" for="password" />
+                        <h:inputSecret id="password" value="#{authBean.utilisateur.password}" 
+                                       styleClass="form-control"
+                                       required="true" requiredMessage="Le mot de passe est requis">
+                            <f:passThroughAttribute name="placeholder" value="••••••••" />
+                        </h:inputSecret>
+                        <h:message for="password" style="color: #e53e3e; font-size: 0.8rem;" />
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Rôle" styleClass="form-label" for="role" />
+                        <h:selectOneMenu id="role" value="#{authBean.utilisateur.role}" styleClass="form-control">
+                            <f:selectItem itemValue="ADHERENT" itemLabel="Adhérent (Lecteur)" />
+                            <f:selectItem itemValue="ADMIN" itemLabel="Administrateur" />
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h:commandButton value="S'inscrire" action="#{authBean.register}" 
+                                         styleClass="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;" />
+                    </div>
+                </h:form>
+
+                <div style="margin-top: 2rem; text-align: center; color: #718096; font-size: 0.9rem;">
+                    Déjà inscrit ? 
+                    <h:link outcome="/login.xhtml" style="color: #667eea; font-weight: 600; text-decoration: none;">Se connecter</h:link>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

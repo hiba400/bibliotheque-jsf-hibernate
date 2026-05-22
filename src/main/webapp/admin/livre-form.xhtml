@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="title">#{empty livreBean.livre.id ? 'Ajouter' : 'Modifier'} un Livre - Bibliothèque</ui:define>
+    <ui:define name="header">Formulaire Livre</ui:define>
+    <ui:define name="breadcrumb">#{empty livreBean.livre.id ? 'Nouveau' : 'Édition'}</ui:define>
+
+    <ui:define name="content">
+        <div style="display: flex; justify-content: center; padding-top: 1rem;">
+            <div class="card animate-fade" style="width: 100%; max-width: 700px; padding: 2.5rem;">
+                <div style="text-align: center; margin-bottom: 2.5rem;">
+                    <div style="width: 60px; height: 60px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 1.5rem;">
+                        <i class="fa-solid #{empty livreBean.livre.id ? 'fa-plus' : 'fa-pen'}"></i>
+                    </div>
+                    <h2 style="font-size: 1.6rem; color: #1a202c; font-weight: 700;">
+                        #{empty livreBean.livre.id ? 'Nouveau Livre' : 'Modifier le Livre'}
+                    </h2>
+                    <p style="color: #718096;">Remplissez les détails de l'ouvrage ci-dessous</p>
+                </div>
+
+                <h:form id="livreForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <!-- Titre -->
+                        <div class="form-group" style="grid-column: span 2;">
+                            <h:outputLabel value="Titre de l'ouvrage" styleClass="form-label" for="titre" />
+                            <h:inputText id="titre" value="#{livreBean.livre.titre}" 
+                                         styleClass="form-control" required="true" 
+                                         requiredMessage="Le titre est obligatoire">
+                                <f:passThroughAttribute name="placeholder" value="Ex: Les Misérables" />
+                            </h:inputText>
+                            <h:message for="titre" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem;" />
+                        </div>
+
+                        <!-- Auteur -->
+                        <div class="form-group">
+                            <h:outputLabel value="Auteur" styleClass="form-label" for="auteur" />
+                            <h:inputText id="auteur" value="#{livreBean.livre.auteur}" 
+                                         styleClass="form-control" required="true"
+                                         requiredMessage="L'auteur est obligatoire">
+                                <f:passThroughAttribute name="placeholder" value="Victor Hugo" />
+                            </h:inputText>
+                            <h:message for="auteur" style="color: #e53e3e; font-size: 0.8rem;" />
+                        </div>
+
+                        <!-- Catégorie -->
+                        <div class="form-group">
+                            <h:outputLabel value="Catégorie" styleClass="form-label" for="categorie" />
+                            <h:selectOneMenu id="categorie" value="#{livreBean.livre.categorie}" styleClass="form-control">
+                                <f:selectItem itemValue="Roman" itemLabel="Roman" />
+                                <f:selectItem itemValue="Science-fiction" itemLabel="Science-fiction" />
+                                <f:selectItem itemValue="Philosophie" itemLabel="Philosophie" />
+                                <f:selectItem itemValue="Histoire" itemLabel="Histoire" />
+                                <f:selectItem itemValue="Poésie" itemLabel="Poésie" />
+                                <f:selectItem itemValue="Autre" itemLabel="Autre" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <!-- Disponibilité -->
+                        <div class="form-group" style="grid-column: span 2;">
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid #edf2f7;">
+                                <h:selectBooleanCheckbox id="dispo" value="#{livreBean.livre.disponible}" />
+                                <h:outputLabel for="dispo" value="Disponible pour l'emprunt" style="margin:0; font-weight: 500; cursor: pointer;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <h:commandLink action="#{livreBean.save}" styleClass="btn btn-primary" style="flex: 2; justify-content: center;">
+                            <i class="fa-solid fa-save"></i> Enregistrer
+                        </h:commandLink>
+                        <h:link outcome="/admin/livres.xhtml" styleClass="btn btn-secondary" style="flex: 1; justify-content: center;">
+                            Annuler
+                        </h:link>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

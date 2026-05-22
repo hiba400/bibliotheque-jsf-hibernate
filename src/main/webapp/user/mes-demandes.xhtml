@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{authBean.checkUserAccess}" />
+    </f:metadata>
+
+    <ui:define name="title">Mes Demandes - Bibliothèque</ui:define>
+    <ui:define name="header">Mes Demandes d'Emprunt</ui:define>
+    <ui:define name="breadcrumb">Mes Demandes</ui:define>
+
+    <ui:define name="content">
+        <div class="card animate-fade">
+            <div class="card-header">
+                <h3 style="font-weight: 600; color: #2d3748;">Suivi de mes demandes</h3>
+            </div>
+
+            <div class="table-container">
+                <h:dataTable value="#{empruntBean.mesEmprunts}" var="e"
+                             styleClass="premium-table"
+                             rendered="#{not empty empruntBean.mesEmprunts}">
+                    
+                    <h:column>
+                        <f:facet name="header">Livre</f:facet>
+                        <div style="font-weight: 600;">#{e.livre.titre}</div>
+                        <div style="font-size: 0.8rem; color: #718096;">#{e.livre.auteur}</div>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Date Demande</f:facet>
+                        <h:outputText value="#{e.dateDemande}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Statut</f:facet>
+                        <span class="badge #{e.statut == 'VALIDE' ? 'badge-success' : (e.statut == 'RETOURNE' ? 'badge-info' : (e.statut == 'REFUSE' ? 'badge-danger' : 'badge-warning'))}">
+                            #{e.statut}
+                        </span>
+                    </h:column>
+                </h:dataTable>
+
+                <h:panelGroup rendered="#{empty empruntBean.mesEmprunts}">
+                    <div style="text-align: center; padding: 4rem 1rem;">
+                        <i class="fa-solid fa-paper-plane" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1.5rem;"></i>
+                        <h3 style="color: #4a5568;">Aucune demande envoyée</h3>
+                        <p style="color: #718096; margin-top: 1rem;">Vous n'avez pas encore fait de demande d'emprunt.</p>
+                    </div>
+                </h:panelGroup>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

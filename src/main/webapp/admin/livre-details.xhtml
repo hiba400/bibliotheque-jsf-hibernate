@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<f:metadata>
+    <f:viewAction action="#{authBean.checkAdminAccess}" />
+</f:metadata>
+<h:head>
+    <title>Détails du Livre - Bibliothèque</title>
+    <h:outputStylesheet name="admin.css" library="css" />
+    <style>
+        .book-detail-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-detail-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .book-cover-large {
+            width: 120px;
+            height: 160px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: #667eea;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .detail-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .status-badge-large {
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .action-buttons-detail {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #666;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons-detail {
+                flex-direction: column;
+            }
+        }
+    </style>
+</h:head>
+<h:body>
+    <div class="container">
+        <div class="book-detail-header">
+            <div class="book-cover-large">
+                #{fn:substring(livreBean.livre.titre, 0, 3)}
+            </div>
+            <h1 style="font-size: 2.5em; margin-bottom: 10px; position: relative; z-index: 1;">#{livreBean.livre.titre}</h1>
+            <p style="font-size: 1.2em; opacity: 0.9; position: relative; z-index: 1;">par #{livreBean.livre.auteur}</p>
+        </div>
+
+        <div class="content">
+            <div class="detail-grid">
+                <!-- Informations principales -->
+                <div class="detail-section">
+                    <h3 style="margin-bottom: 20px; color: #333;">Informations principales</h3>
+
+                    <div style="margin-bottom: 20px;">
+                        <div class="detail-label">Titre</div>
+                        <div class="detail-value">#{livreBean.livre.titre}</div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div class="detail-label">Auteur</div>
+                        <div class="detail-value">#{livreBean.livre.auteur}</div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div class="detail-label">Catégorie</div>
+                        <div class="detail-value">
+                            <span style="background: #e3f2fd; color: #1976d2; padding: 6px 12px; border-radius: 20px; font-size: 14px;">
+                                #{livreBean.livre.categorie}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div class="detail-label">Statut</div>
+                        <div class="detail-value">
+                            <h:panelGroup rendered="#{livreBean.livre.disponible}" styleClass="status-badge-large status-available">
+                                Disponible
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{not livreBean.livre.disponible}" styleClass="status-badge-large status-unavailable">
+                                Emprunté
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div class="detail-label">ID du livre</div>
+                        <div class="detail-value">#{livreBean.livre.id}</div>
+                    </div>
+                </div>
+
+                <!-- Actions et informations supplémentaires -->
+                <div>
+                    <!-- Actions rapides -->
+                    <div class="detail-section">
+                        <h3 style="margin-bottom: 20px; color: #333;">Actions rapides</h3>
+                        <div class="action-buttons-detail">
+                            <h:form style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                <h:commandButton value="Modifier"
+                                                 action="#{livreBean.edit(livreBean.livre)}"
+                                                 styleClass="btn btn-warning" />
+                                <h:commandButton value="Supprimer"
+                                                 action="#{livreBean.delete(livreBean.livre)}"
+                                                 onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ? Cette action est irréversible.');"
+                                                 styleClass="btn btn-danger" />
+                            </h:form>
+                        </div>
+                    </div>
+
+                    <!-- Informations système -->
+                    <div class="detail-section" style="margin-top: 20px;">
+                        <h3 style="margin-bottom: 20px; color: #333;">Informations système</h3>
+
+                        <div class="info-card">
+                            <h4>Statut de disponibilité</h4>
+                            <p>
+                                <h:panelGroup rendered="#{livreBean.livre.disponible}">
+                                    Ce livre est actuellement disponible pour le prêt. Les utilisateurs peuvent l'emprunter selon les règles de la bibliothèque.
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{not livreBean.livre.disponible}">
+                                    Ce livre est actuellement emprunté. Il ne sera pas disponible pour le prêt jusqu'à son retour.
+                                </h:panelGroup>
+                            </p>
+                        </div>
+
+                        <div class="info-card">
+                            <h4>Catégorie</h4>
+                            <p>
+                                Ce livre est classé dans la catégorie "#{livreBean.livre.categorie}".
+                                Cette classification aide les utilisateurs à trouver des livres similaires et permet une meilleure organisation de la bibliothèque.
+                            </p>
+                        </div>
+
+                        <div class="info-card">
+                            <h4>Actions possibles</h4>
+                            <p>
+                                En tant qu'administrateur, vous pouvez modifier les informations de ce livre,
+                                changer son statut de disponibilité, ou le supprimer complètement de la base de données.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons de navigation -->
+            <div style="margin-top: 30px; text-align: center; padding-top: 20px; border-top: 1px solid #e9ecef;">
+                <h:link outcome="/admin/livres.xhtml" value="Retour à la liste des livres"
+                        styleClass="btn btn-secondary" />
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

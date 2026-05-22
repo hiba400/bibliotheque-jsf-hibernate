@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:fn="jakarta.tags.functions"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{authBean.checkAdminAccess}" />
+    </f:metadata>
+
+    <ui:define name="title">Gestion des Livres - Bibliothèque</ui:define>
+    <ui:define name="header">Gestion du Catalogue</ui:define>
+    <ui:define name="breadcrumb">Livres</ui:define>
+
+    <ui:define name="content">
+        <h:messages id="messages" globalOnly="true" styleClass="animate-fade"
+                    style="list-style: none; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 500;"
+                    infoStyle="background: #d1fae5; color: #065f46; border: 1px solid #10b981;"
+                    errorStyle="background: #fee2e2; color: #991b1b; border: 1px solid #ef4444;" />
+
+        <h:form id="mainForm">
+            <div class="card animate-fade">
+                <div class="card-header">
+                    <div style="display: flex; gap: 1rem; flex: 1; max-width: 600px;">
+                        <div style="position: relative; flex: 1;">
+                            <i class="fa-solid fa-search" style="position: absolute; left: 1rem; top: 1.1rem; color: #a0aec0;"></i>
+                            <h:inputText value="#{livreBean.keyword}" 
+                                         styleClass="form-control" style="padding-left: 3rem; background: #f8fafc;"
+                                         placeholder="Rechercher un titre ou auteur...">
+                                <f:ajax event="keyup" listener="#{livreBean.search}" render="booksTableContainer" />
+                            </h:inputText>
+                        </div>
+                    </div>
+                    
+                    <h:commandLink action="#{livreBean.nouveau}" styleClass="btn btn-primary">
+                        <i class="fa-solid fa-plus-circle"></i> Ajouter un livre
+                    </h:commandLink>
+                </div>
+
+                <h:panelGroup id="booksTableContainer" layout="block">
+                    <div class="table-container">
+                        <h:dataTable id="booksTable" value="#{livreBean.livres}" var="l"
+                                     styleClass="premium-table"
+                                     rendered="#{not empty livreBean.livres}">
+                            
+                            <h:column>
+                                <f:facet name="header">Couverture</f:facet>
+                                <div style="width: 45px; height: 60px; background: var(--secondary-gradient); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    #{fn:substring(l.titre, 0, 2)}
+                                </div>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Titre</f:facet>
+                                <div style="font-weight: 600; color: #1a202c;">#{l.titre}</div>
+                                <div style="font-size: 0.8rem; color: #718096;">ID: #LIB-#{l.id}</div>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Auteur</f:facet>
+                                <div style="color: #4a5568;">#{l.auteur}</div>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Catégorie</f:facet>
+                                <span class="badge badge-info">#{l.categorie}</span>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Statut</f:facet>
+                                <h:panelGroup rendered="#{l.disponible}">
+                                    <span class="badge badge-success"><i class="fa-solid fa-check"></i> Disponible</span>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{not l.disponible}">
+                                    <span class="badge badge-danger"><i class="fa-solid fa-times"></i> Emprunté</span>
+                                </h:panelGroup>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Actions</f:facet>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <h:commandLink action="#{livreBean.edit(l)}" title="Modifier" styleClass="btn btn-secondary" style="padding: 0.5rem 0.8rem;">
+                                        <i class="fa-solid fa-pen-to-square" style="color: #4a5568;"></i>
+                                    </h:commandLink>
+                                    <h:commandLink action="#{livreBean.delete(l)}" title="Supprimer" 
+                                                   onclick="if (!confirm('Supprimer ce livre ?')) return false;" 
+                                                   styleClass="btn btn-secondary" style="padding: 0.5rem 0.8rem;">
+                                        <i class="fa-solid fa-trash-can" style="color: #e53e3e;"></i>
+                                        <f:ajax render="@form :messages" />
+                                    </h:commandLink>
+                                </div>
+                            </h:column>
+                        </h:dataTable>
+
+                        <!-- Empty State -->
+                        <h:panelGroup rendered="#{empty livreBean.livres}" styleClass="animate-fade">
+                            <div style="text-align: center; padding: 4rem 1rem;">
+                                <i class="fa-solid fa-book-open" style="font-size: 4rem; color: #e2e8f0; margin-bottom: 1.5rem;"></i>
+                                <h3 style="color: #4a5568;">Aucun livre trouvé</h3>
+                                <p style="color: #a0aec0;">Le catalogue est actuellement vide ou ne correspond pas à votre recherche.</p>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </h:panelGroup>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

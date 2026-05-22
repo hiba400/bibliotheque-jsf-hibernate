@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{authBean.checkUserAccess}" />
+    </f:metadata>
+
+    <ui:define name="title">Catalogue - Bibliothèque</ui:define>
+    <ui:define name="header">Découvrir nos Livres</ui:define>
+    <ui:define name="breadcrumb">Catalogue</ui:define>
+
+    <ui:define name="content">
+        <div class="card animate-fade">
+            <h:messages globalOnly="true" styleClass="alert" 
+                        infoClass="alert-success" errorClass="alert-danger" warnClass="alert-warning" 
+                        style="list-style: none; margin: 1rem; padding: 1rem; border-radius: 8px;" />
+            <div class="card-header">
+                <h:form style="display: flex; gap: 1rem; flex: 1; max-width: 600px;">
+                    <h:inputText value="#{livreBean.keyword}" 
+                                 styleClass="form-control" 
+                                 placeholder="Rechercher par titre, auteur..." />
+                    <h:commandLink action="#{livreBean.search}" styleClass="btn btn-primary">
+                        <i class="fa-solid fa-search"></i>
+                    </h:commandLink>
+                </h:form>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <ui:repeat value="#{livreBean.livres}" var="l">
+                    <div class="card" style="margin-bottom: 0; padding: 1.5rem; transition: var(--transition);">
+                        <div style="display: flex; gap: 1rem;">
+                            <div style="width: 70px; height: 100px; background: var(--primary-gradient); border-radius: 8px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
+                                BOOK
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="badge #{l.disponible ? 'badge-success' : 'badge-danger'}" style="margin-bottom: 0.5rem; padding: 0.2rem 0.6rem;">
+                                    #{l.disponible ? 'Disponible' : 'Indisponible'}
+                                </div>
+                                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.2rem; color: #1a202c;">#{l.titre}</h3>
+                                <p style="font-size: 0.9rem; color: #718096; margin-bottom: 1rem;">#{l.auteur}</p>
+                                
+                                <h:form>
+                                    <h:commandLink action="#{empruntBean.emprunter(l)}" 
+                                                   rendered="#{l.disponible}"
+                                                   styleClass="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem; width: 100%; justify-content: center;">
+                                        <i class="fa-solid fa-plus-circle"></i> Emprunter
+                                    </h:commandLink>
+                                    <button disabled="disabled" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem; width: 100%; justify-content: center; cursor: not-allowed; display: #{l.disponible ? 'none' : 'flex'}">
+                                        Indisponible
+                                    </button>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </ui:repeat>
+            </div>
+            
+            <h:panelGroup rendered="#{empty livreBean.livres}">
+                <div style="text-align: center; padding: 5rem 1rem;">
+                    <i class="fa-solid fa-ghost" style="font-size: 3rem; color: #cbd5e0; margin-bottom: 1.5rem;"></i>
+                    <p style="color: #a0aec0;">Aucun livre ne correspond à votre recherche.</p>
+                </div>
+            </h:panelGroup>
+        </div>
+    </ui:define>
+</ui:composition>

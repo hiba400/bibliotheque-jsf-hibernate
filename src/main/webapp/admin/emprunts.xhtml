@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{authBean.checkAdminAccess}" />
+    </f:metadata>
+
+
+    <ui:define name="title">Gestion des Emprunts - Bibliothèque</ui:define>
+    <ui:define name="header">Suivi des Emprunts</ui:define>
+    <ui:define name="breadcrumb">Emprunts</ui:define>
+
+    <ui:define name="content">
+        <div class="card animate-fade">
+            <div class="card-header">
+                <h3 style="font-weight: 600; color: #2d3748;">Liste des Emprunts en cours</h3>
+            </div>
+
+            <div class="table-container">
+                <h:form id="empruntsForm">
+                    <h:dataTable value="#{empruntBean.emprunts}" var="e"
+                                 styleClass="premium-table"
+                                 rendered="#{not empty empruntBean.emprunts}">
+                        
+                        <h:column>
+                            <f:facet name="header">Livre</f:facet>
+                            <div style="font-weight: 600;">#{e.livre.titre}</div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Adhérent</f:facet>
+                            <div>#{e.utilisateur.nom}</div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Date d'emprunt</f:facet>
+                            <div>
+                                <h:outputText value="#{e.dateDemande}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Date de retour</f:facet>
+                            <div>
+                                <h:outputText value="#{e.dateRetour}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                                <h:outputText value="En cours" rendered="#{empty e.dateRetour}" styleClass="badge badge-info" />
+                            </div>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <h:commandLink action="#{empruntBean.retourner(e)}" 
+                                           styleClass="btn btn-primary btn-sm">
+                                <i class="fa-solid fa-undo"></i> Marquer comme retourné
+                            </h:commandLink>
+                        </h:column>
+                    </h:dataTable>
+
+                    <h:panelGroup rendered="#{empty empruntBean.emprunts}">
+                        <div style="text-align: center; padding: 4rem 1rem;">
+                            <i class="fa-solid fa-inbox" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1.5rem;"></i>
+                            <h3 style="color: #4a5568;">Aucun emprunt en cours</h3>
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

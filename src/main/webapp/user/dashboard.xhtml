@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{authBean.checkUserAccess}" />
+    </f:metadata>
+
+    <ui:define name="title">Mon Espace - Bibliothèque</ui:define>
+    <ui:define name="header">Mon Dashboard Adhérent</ui:define>
+    <ui:define name="breadcrumb">Dashboard</ui:define>
+
+    <ui:define name="content">
+        <div class="stats-grid">
+            <div class="card stat-card" style="background: var(--primary-gradient);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="stat-label">Mes Emprunts</div>
+                        <div class="count">#{not empty empruntBean.mesEmprunts ? empruntBean.mesEmprunts.size() : 0}</div>
+                    </div>
+                    <i class="fa-solid fa-book-reader" style="font-size: 2rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+
+            <div class="card stat-card" style="background: var(--secondary-gradient);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="stat-label">Livres Disponibles</div>
+                        <div class="count">#{livreBean.livres.stream().filter(l -> l.disponible).count()}</div>
+                    </div>
+                    <i class="fa-solid fa-list-ul" style="font-size: 2rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <!-- Mes Emprunts en cours -->
+            <div class="card animate-fade">
+                <div class="card-header">
+                    <h3 style="font-weight: 600; color: #2d3748;">Mes Emprunts en cours</h3>
+                </div>
+                <h:dataTable value="#{empruntBean.mesEmpruntsEnCours}" var="e" styleClass="table" style="width: 100%; border-collapse: collapse;">
+                    <h:column>
+                        <f:facet name="header">Livre</f:facet>
+                        <div style="font-weight: 500;">#{e.livre.titre}</div>
+                        <div style="font-size: 0.8rem; color: #718096;">#{e.livre.auteur}</div>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Statut</f:facet>
+                        <span class="badge #{e.statut == 'VALIDE' ? 'badge-success' : 'badge-warning'}">
+                            #{e.statut == 'VALIDE' ? 'En cours' : 'Attente validation'}
+                        </span>
+                    </h:column>
+                </h:dataTable>
+                <h:panelGroup rendered="#{empty empruntBean.mesEmpruntsEnCours}">
+                    <p style="padding: 2rem; text-align: center; color: #a0aec0;">Vous n'avez pas d'emprunt actif.</p>
+                </h:panelGroup>
+            </div>
+
+            <!-- Livres disponibles -->
+            <div class="card animate-fade">
+                <div class="card-header">
+                    <h3 style="font-weight: 600; color: #2d3748;">Livres à découvrir</h3>
+                </div>
+                <h:form>
+                    <ui:repeat value="#{livreBean.livres}" var="l" size="3">
+                        <h:panelGroup rendered="#{l.disponible}">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #edf2f7;">
+                                <div>
+                                    <div style="font-weight: 500;">#{l.titre}</div>
+                                    <div style="font-size: 0.8rem; color: #718096;">#{l.auteur}</div>
+                                </div>
+                                <h:commandLink action="#{empruntBean.emprunter(l)}" styleClass="btn btn-primary" style="font-size: 0.75rem; padding: 0.3rem 0.7rem;">
+                                    Emprunter
+                                </h:commandLink>
+                            </div>
+                        </h:panelGroup>
+                    </ui:repeat>
+                </h:form>
+                <div style="padding: 1rem; text-align: center;">
+                    <h:link outcome="/user/catalogue.xhtml" style="font-size: 0.9rem; color: var(--primary-color);">
+                        Voir tout le catalogue <i class="fa-solid fa-arrow-right"></i>
+                    </h:link>
+                </div>
+            </div>
+        </div>
+
+        <div class="card animate-fade" style="margin-top: 1.5rem;">
+            <div class="card-header">
+                <h3 style="font-weight: 600; color: #2d3748;">Actions rapides</h3>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <h:link outcome="/user/catalogue.xhtml" styleClass="btn btn-primary">
+                    <i class="fa-solid fa-search"></i> Explorer le catalogue
+                </h:link>
+                <h:link outcome="/user/mes-emprunts.xhtml" styleClass="btn btn-secondary">
+                    <i class="fa-solid fa-history"></i> Historique des emprunts
+                </h:link>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

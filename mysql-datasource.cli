@@ -1,0 +1,11 @@
+# Déployer le driver MySQL (avec force pour écraser si déjà présent)
+deploy target/projet_123/WEB-INF/lib/mysql-connector-j-8.3.0.jar --name=mysql --force
+
+# Configuration du DataSource MySQL sans mot de passe
+# On supprime si existe déjà pour recréer proprement
+if (outcome == success) with /subsystem=datasources/data-source=bibliothequeDS:read-resource
+    /subsystem=datasources/data-source=bibliothequeDS:remove
+end-if
+
+/subsystem=datasources/data-source=bibliothequeDS:add(jndi-name=java:jboss/datasources/bibliothequeDS,driver-name=mysql,connection-url="jdbc:mysql://localhost:3306/bibliotheque_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC",user-name=root)
+/subsystem=datasources/data-source=bibliothequeDS:enable

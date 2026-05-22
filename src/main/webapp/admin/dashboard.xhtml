@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{authBean.checkAdminAccess}" />
+    </f:metadata>
+
+    <ui:define name="title">Dashboard Admin - Bibliothèque</ui:define>
+    <ui:define name="header">Tableau de Bord Administrateur</ui:define>
+    <ui:define name="breadcrumb">Dashboard</ui:define>
+
+    <ui:define name="content">
+        <!-- Stats Row -->
+        <div class="stats-grid">
+            <div class="card stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="stat-label">Total Livres</div>
+                        <div class="count">#{livreBean.livres.size()}</div>
+                    </div>
+                    <i class="fa-solid fa-book-open" style="font-size: 2rem; opacity: 0.3;"></i>
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 0.5rem;">
+                    <i class="fa-solid fa-check-circle"></i> Disponibles: #{livreBean.livres.stream().filter(l -> l.disponible).count()}
+                </div>
+            </div>
+
+            <div class="card stat-card" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="stat-label">Adhérents</div>
+                        <div class="count">#{utilisateurBean.utilisateurs.size()}</div>
+                    </div>
+                    <i class="fa-solid fa-users" style="font-size: 2rem; opacity: 0.3;"></i>
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 0.5rem;">
+                    <i class="fa-solid fa-star"></i> Membres actifs
+                </div>
+            </div>
+
+            <div class="card stat-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="stat-label">Emprunts Actifs</div>
+                        <div class="count">#{empruntBean.emprunts.size()}</div>
+                    </div>
+                    <i class="fa-solid fa-hand-holding-hand" style="font-size: 2rem; opacity: 0.3;"></i>
+                </div>
+                <div style="font-size: 0.8rem; margin-top: 0.5rem;">
+                    <i class="fa-solid fa-arrow-trend-up"></i> +12% cette semaine
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Actions / Links -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 style="font-weight: 600; color: #2d3748;">Actions Rapides</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    <h:link outcome="/admin/livre-form.xhtml" styleClass="btn btn-primary" style="flex-direction: column; padding: 1.5rem; text-align: center;">
+                        <i class="fa-solid fa-plus-circle" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                        Nouveau Livre
+                    </h:link>
+                    <h:link outcome="/admin/livres.xhtml" styleClass="btn btn-secondary" style="flex-direction: column; padding: 1.5rem; text-align: center;">
+                        <i class="fa-solid fa-list-check" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                        Gérer Catalogue
+                    </h:link>
+                    <h:link outcome="/admin/adherents.xhtml" styleClass="btn btn-secondary" style="flex-direction: column; padding: 1.5rem; text-align: center;">
+                        <i class="fa-solid fa-user-gear" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                        Gérer Adhérents
+                    </h:link>
+                </div>
+            </div>
+
+            <div class="card" style="background: #fff;">
+                <div class="card-header">
+                    <h3 style="font-weight: 600; color: #2d3748;">État Système</h3>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid #edf2f7;">
+                        <span style="font-size: 0.9rem; color: #718096;">Serveur WildFly</span>
+                        <span class="badge badge-success">En ligne</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid #edf2f7;">
+                        <span style="font-size: 0.9rem; color: #718096;">Base de données</span>
+                        <span class="badge badge-success">Connecté</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="title">Connexion - Bibliothèque</ui:define>
+
+    <ui:define name="content">
+        <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+            <div class="card animate-fade" style="width: 100%; max-width: 450px; padding: 3rem;">
+                <div style="text-align: center; margin-bottom: 2.5rem;">
+                    <div style="width: 80px; height: 80px; background: var(--primary-gradient); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem; box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h2 style="font-size: 1.8rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">Connexion</h2>
+                    <p style="color: #718096;">Accédez à votre espace bibliothèque</p>
+                </div>
+
+                <h:form id="loginForm">
+                    <h:messages globalOnly="true" style="list-style: none; padding: 1rem; background: #fff5f5; color: #c53030; border-radius: 10px; margin-bottom: 1.5rem; font-size: 0.9rem;" />
+
+                    <div class="form-group">
+                        <h:outputLabel value="Email" styleClass="form-label" for="email" />
+                        <div style="position: relative;">
+                            <i class="fa-solid fa-envelope" style="position: absolute; left: 1rem; top: 1.1rem; color: #a0aec0;"></i>
+                            <h:inputText id="email" value="#{authBean.email}" 
+                                         styleClass="form-control" style="padding-left: 3rem;"
+                                         required="true" requiredMessage="L'email est requis">
+                                <f:passThroughAttribute name="placeholder" value="votre@email.com" />
+                            </h:inputText>
+                        </div>
+                        <h:message for="email" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem;" />
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Mot de passe" styleClass="form-label" for="password" />
+                        <div style="position: relative;">
+                            <i class="fa-solid fa-key" style="position: absolute; left: 1rem; top: 1.1rem; color: #a0aec0;"></i>
+                            <h:inputSecret id="password" value="#{authBean.password}" 
+                                           styleClass="form-control" style="padding-left: 3rem;"
+                                           required="true" requiredMessage="Le mot de passe est requis">
+                                <f:passThroughAttribute name="placeholder" value="••••••••" />
+                            </h:inputSecret>
+                        </div>
+                        <h:message for="password" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem;" />
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h:commandButton value="Se connecter" action="#{authBean.login}" 
+                                         styleClass="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;" />
+                    </div>
+                </h:form>
+
+                <div style="margin-top: 2rem; text-align: center; color: #718096; font-size: 0.9rem;">
+                    Vous n'avez pas de compte ? 
+                    <h:link outcome="/register.xhtml" style="color: #667eea; font-weight: 600; text-decoration: none;">S'inscrire</h:link>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

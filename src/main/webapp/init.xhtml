@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<head>
+    <title>Initialisation - Bibliothèque</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; max-width: 500px; }
+        h1 { color: #333; margin-bottom: 20px; }
+        .btn { background: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; margin: 10px; }
+        .btn:hover { background: #218838; }
+        .message { margin: 20px 0; padding: 15px; border-radius: 8px; background: #d4edda; color: #155724; }
+        .links { margin-top: 30px; }
+        .links a { color: #007bff; text-decoration: none; margin: 0 10px; }
+        .links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Initialisation de la Base de Données</h1>
+        <p>Cliquez sur le bouton ci-dessous pour créer les utilisateurs de test.</p>
+        
+        <h:form>
+            <h:commandButton value="Créer les Utilisateurs de Test" 
+                             action="#{setupBean.createTestUsers()}" 
+                             styleClass="btn" />
+        </h:form>
+        
+        <h:panelGroup rendered="#{not empty setupBean.message}">
+            <div class="message">
+                <h:outputText value="#{setupBean.message}" escape="false" />
+            </div>
+        </h:panelGroup>
+        
+        <div class="links">
+            <a href="login.xhtml">Page de Connexion</a> | 
+            <a href="admin/dashboard.xhtml">Dashboard Admin</a>
+        </div>
+        
+        <div style="margin-top: 20px; color: #666; font-size: 14px;">
+            <strong>Identifiants de test :</strong><br/>
+            Admin: admin@biblio.com / admin123<br/>
+            User: user@biblio.com / user123<br/>
+        </div>
+    </div>
+</body>
+</html>
